@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptAvailable, RequestBlocked
+from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound
 
 app = Flask(__name__)
 
@@ -14,10 +14,8 @@ def get_transcript():
         transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=["en", "en-US", "en-GB"])
         full_text = " ".join([entry["text"] for entry in transcript])
         return jsonify({"transcript": full_text, "success": True})
-    except (TranscriptsDisabled, NoTranscriptAvailable):
+    except (TranscriptsDisabled, NoTranscriptFound):
         return jsonify({"error": "Transcript not available"}), 404
-    except RequestBlocked:
-        return jsonify({"error": "YouTube blocked this server IP"}), 403
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
