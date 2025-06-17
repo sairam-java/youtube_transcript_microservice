@@ -1,0 +1,6 @@
+
+authtoken: <your-ngrok-authtoken>
+tunnels:
+  transcript:
+    proto: http
+    addr: 5001
